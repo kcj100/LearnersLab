@@ -1,50 +1,50 @@
 package org.example;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class People implements Iterable<Person> {
-    List<Person> personList = new ArrayList<>();
+public abstract class People<E extends Person> implements Iterable<E> {
+    private List<E> people = new ArrayList<>();
 
-    public void add(Person person) {
-        personList.add(person);
+    public void add(E person) {
+        people.add(person);
     }
 
-    public Person findById(long id) {
-        return personList.stream()
-                .filter(person -> person.getId() == id)
+    public E findById(long id) {
+        return people.stream()
+                .filter(e -> e.getId() == id)
                 .findAny()
                 .orElseThrow(() ->
                         new NoSuchElementException(("Person with id " + id + " not found")));
     }
 
-    public boolean contains(Person person) {
-        return personList.contains(person);
+    public boolean contains(E person) {
+        return people.contains(person);
     }
 
-    public void remove(Person person) {
-        personList.remove(person);
+    public void remove(E person) {
+        people.remove(person);
     }
 
     public void remove(long id) {
-        personList.removeIf(person -> person.getId() == id);
+        people.removeIf(person -> person.getId() == id);
     }
 
     public void removeAll() {
-        personList.clear();
+        people.clear();
     }
 
     public int count() {
-        return personList.size();
+        return people.size();
     }
 
-    public Person[] toArray() {
-        return personList.toArray(new Person[0]);
-    }
+    public abstract E[] toArray();
 
+    public List<E> getPeople() {
+        return people;
+    }
 
     @Override
-    public Iterator<Person> iterator() {
-        return personList.iterator();
+    public Iterator<E> iterator() {
+        return people.iterator();
     }
 }

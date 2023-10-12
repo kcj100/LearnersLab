@@ -1,5 +1,7 @@
 package org.example;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,40 +12,36 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PeopleTest {
 
+    private Students students; // Declare a field to hold the Students instance
+
+    @BeforeEach
+    void setUp() {
+        students = Students.getInstance(); // Initialize a new Students instance before each test
+    }
+
+    @AfterEach
+    void tearDown() {
+        students.removeAll(); // Clean up the students after each test
+    }
+
     @Test
     void testAdd() {
-        List<Person> expectedPersonList =
-                new ArrayList<>(Arrays.asList(new Person[]{
-                        new Person(1L, "John"),
-                        new Person(2L, "Tim"),
-                        new Person(3L, "Pat")}));
-        People personList = new People();
-        personList.add(new Person(1L, "John"));
-        personList.add(new Person(2L, "Tim"));
-        personList.add(new Person(3L, "Pat"));
-        assertArrayEquals(expectedPersonList.toArray(new Person[0]), personList.toArray());
+        students.add(new Student(5L, "Julio Rodriguez"));
+        assertEquals(students.count(), 4);
     }
 
     @Test
     void testRemove() {
-        People personList = new People();
-        Person person1 = new Person(1L, "John");
-        personList.add(person1);
-        personList.add(new Person(2L, "Tim"));
-        personList.add(new Person(3L, "Pat"));
-        personList.remove(person1);
-        assertFalse(personList.contains(person1));
+        students.remove(1L);
+        assertEquals(students.count(), 0);
     }
 
     @Test
     void testFindById() {
-        long expectedId = 123456789L;
-        People people = new People();
-        Person person1 = new Person(1L, "John");
-        Person expectedPerson = new Person(expectedId, "Tim");
-        people.add(person1);
-        people.add(expectedPerson);
-        assertEquals(expectedPerson.getId(), people.findById(expectedId).getId());
+        Student expectedStudent = new Student(2L, "Jordan Mitchell");
+        students.add(expectedStudent);
+        Student actualStudent = (Student) Students.getInstance().findById(expectedStudent.getId());
+        assertEquals(expectedStudent, actualStudent);
     }
 
 }
